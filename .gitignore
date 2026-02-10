@@ -1,6 +1,15 @@
+# Python
 __pycache__/
 *.pyc
-.env
-venv/
-.env/
+.venv/
+env/
+
+# OS
 .DS_Store
+
+# PDFs & uploads
+uploads/
+*.pdf
+
+# VS Code
+.vscode/

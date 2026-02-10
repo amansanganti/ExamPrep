@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Exam Question Pattern Analyzer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <h1>Exam Question Pattern Analyzer</h1>
+
+  <!-- INPUT CARD -->
+  <div class="card">
+    <h2>Input Questions</h2>
+
+    <textarea
+      id="inputText"
+      placeholder="Paste exam questions here..."
+    ></textarea>
+
+    <h3>Upload PDF Question Paper</h3>
+    <label class="file-upload">
+        <input type="file" id="pdfFile" accept=".pdf" hidden />
+        <span>📄 Choose PDF File</span>
+        
+    </label>
+    <span id="fileName" class="file-name">No file selected</span>
+    <br><br>
+
+    <div class="btn-group">
+      <button onclick="uploadPDF()">Upload & Extract PDF</button>
+      <button onclick="analyze()">Analyze</button>
+    </div>
+    <br>
+    <div class="btn-group">
+        <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+        <button onclick="exportPDF()">⬇ Export Report</button>
+    </div>
+    <div class="card" id="mcqSection">
+        <h2>🧠 Auto-Generated MCQs</h2>
+        <div id="mcqContainer"></div>
+    </div>
+  </div>
+
+  <!-- CHART CARD -->
+  <div class="card">
+    <h2>Topic Weightage</h2>
+    <canvas id="topicChart"></canvas>
+  </div>
+
+  <div class="card" id="insightsCard">
+    <h2>📌 Insights</h2>
+    <ul id="insightsList"></ul></div>
+
+  <!-- TABLE CARD -->
+  <div class="card">
+    <h2>Question Analysis</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Question</th>
+          <th>Topic</th>
+          <th>Difficulty</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody id="resultTable"></tbody>
+    </table>
+  </div>
+
+  <!-- JS -->
+  <script src="script.js"></script>
+</body>
+</html>
