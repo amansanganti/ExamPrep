@@ -42,9 +42,20 @@
         <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
         <button onclick="exportPDF()">⬇ Export Report</button>
     </div>
+
+    
+
     <div class="card" id="mcqSection">
         <h2>🧠 Auto-Generated MCQs</h2>
         <div id="mcqContainer"></div>
+    </div>
+    <div class="card">
+        <h2>🔮 Predicted Exam Questions</h2>
+        <ul id="predictionList"></ul>
+    </div>
+    <div class="card">
+        <h2>🧬 Question DNA Patterns</h2>
+        <ul id="dnaList"></ul>
     </div>
   </div>
 
@@ -57,6 +68,18 @@
   <div class="card" id="insightsCard">
     <h2>📌 Insights</h2>
     <ul id="insightsList"></ul></div>
+
+    <div class="card">
+  <h2>📅 Smart Study Plan</h2>
+  <table>
+    <tr>
+      <th>Topic</th>
+      <th>Recommended Hours</th>
+      <th>Reason</th>
+    </tr>
+    <tbody id="studyPlanTable"></tbody>
+  </table>
+</div>
 
   <!-- TABLE CARD -->
   <div class="card">

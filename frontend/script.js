@@ -18,6 +18,9 @@ function analyze() {
       renderChart(data.topic_weightage);
       renderTable(data.questions);
       renderMCQs(data.questions);
+      renderPredictions(data.predictions);
+      renderDNA(data.dna_patterns);
+      renderStudyPlan(data.study_plan);
     })
     .catch(err => {
       console.error(err);
@@ -157,5 +160,44 @@ function renderMCQs(questions) {
 
       container.appendChild(div);
     });
+  });
+}
+function renderPredictions(predictions) {
+  const list = document.getElementById("predictionList");
+  list.innerHTML = "";
+
+  predictions.forEach(item => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      📌 ${item.question}
+      <span style="float:right; font-weight:bold; color:#4f46e5;">
+        ${item.confidence}%
+      </span>
+    `;
+    list.appendChild(li);
+  });
+}
+function renderDNA(dnaPatterns) {
+  const list = document.getElementById("dnaList");
+  list.innerHTML = "";
+
+  Object.entries(dnaPatterns).forEach(([dna, count]) => {
+    const li = document.createElement("li");
+    li.innerText = `${dna} → ${count} times`;
+    list.appendChild(li);
+  });
+}
+function renderStudyPlan(plan) {
+  const table = document.getElementById("studyPlanTable");
+  table.innerHTML = "";
+
+  plan.forEach(p => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${p.topic}</td>
+      <td>${p.recommended_hours} hrs</td>
+      <td>${p.reason}</td>
+    `;
+    table.appendChild(row);
   });
 }

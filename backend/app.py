@@ -127,7 +127,77 @@ def generate_mcqs(topic, difficulty):
         "options": options,
         "answer": answer
     }]  
-        
+def predict_questions(topic_count):
+    predictions = []
+
+    if not topic_count:
+        return predictions
+
+    max_count = max(topic_count.values())
+
+    for topic, count in sorted(topic_count.items(), key=lambda x: x[1], reverse=True):
+        # Confidence calculation (relative frequency)
+        confidence = int((count / max_count) * 100)
+
+        # Question pattern based on importance
+        if count >= 3:
+            questions = [
+                f"Explain {topic}",
+                f"Discuss challenges in {topic}"
+            ]
+        elif count == 2:
+            questions = [f"Describe {topic}"]
+        else:
+            questions = [f"What is {topic}?"]
+
+        for q in questions:
+            predictions.append({
+                "question": q,
+                "confidence": confidence
+            })
+
+    return predictions[:8]  # limit predictions
+
+def generate_study_plan(topic_count, question_data):
+    plan = []
+
+    max_count = max(topic_count.values())
+
+    for topic, count in topic_count.items():
+        related = [q for q in question_data if q["topic"] == topic]
+
+        hard = any(q["difficulty"] == "Hard" for q in related)
+
+        if count >= max_count * 0.7:
+            hours = 2.5 if hard else 2
+        elif count >= max_count * 0.4:
+            hours = 1.5
+        else:
+            hours = 1
+
+        plan.append({
+            "topic": topic,
+            "recommended_hours": hours,
+            "reason": "High exam frequency" if count >= max_count * 0.7 else "Moderate exam frequency"
+        })
+
+    return sorted(plan, key=lambda x: x["recommended_hours"], reverse=True)
+
+def detect_verb(question):
+    q = question.lower()
+
+    verbs = [
+        "explain", "describe", "define",
+        "compare", "analyze", "discuss",
+        "evaluate", "design"
+    ]
+
+    for v in verbs:
+        if v in q:
+            return v.title()
+
+    return "General"        
+
 @app.route("/")
 def home():
     return jsonify({
@@ -160,6 +230,7 @@ def analyze_questions():
     topic_count = {}
     question_topics = []
 
+    # 🔁 MAIN LOOP
     for q in raw_questions:
         original_q = q.strip()
         q_lower = original_q.lower()
@@ -167,50 +238,70 @@ def analyze_questions():
         if len(q_lower) < 10:
             continue
 
-        # ✅ 1. ALWAYS initialize
+        # 1️⃣ Topic detection
         final_topic = None
-
-        # ✅ 2. Try predefined topics
         for topic, keywords in TOPIC_KEYWORDS.items():
             if any(kw in q_lower for kw in keywords):
                 final_topic = topic
                 break
 
-        # ✅ 3. Fallback topic detection
         if not final_topic:
             final_topic = guess_topic_from_question(original_q)
 
-        # ✅ 4. Absolute safety
         if not final_topic:
             final_topic = "General"
 
-        # ✅ 5. Detect difficulty & type
+        # 2️⃣ Other attributes
         difficulty = detect_difficulty(original_q)
         q_type = detect_question_type(original_q)
+        verb = detect_verb(original_q)
 
-        # ✅ 6. Generate MCQs (BANK or DYNAMIC)
-        if final_topic in MCQ_BANK:
-            mcqs = MCQ_BANK[final_topic]
-        else:
-            mcqs = generate_mcqs(final_topic, difficulty)
+        # 3️⃣ MCQs
+        mcqs = MCQ_BANK.get(final_topic, generate_mcqs(final_topic, difficulty))
 
-        # ✅ 7. Count topics
+        # 4️⃣ Count topic
         topic_count[final_topic] = topic_count.get(final_topic, 0) + 1
 
-        # ✅ 8. Append ONCE
+        # 5️⃣ DNA
+        dna = {
+            "topic": final_topic,
+            "difficulty": difficulty,
+            "type": q_type,
+            "verb": verb
+        }
+
+        # 6️⃣ Append ONCE
         question_topics.append({
             "question": original_q,
             "topic": final_topic,
             "difficulty": difficulty,
             "type": q_type,
+            "verb": verb,
+            "dna": dna,
             "mcqs": mcqs
         })
+
+    # 🧬 BUILD DNA PATTERNS (AFTER LOOP)
+    dna_patterns = {}
+    for q in question_topics:
+        key = f"{q['topic']} | {q['difficulty']} | {q['type']} | {q['verb']}"
+        dna_patterns[key] = dna_patterns.get(key, 0) + 1
+
+    # 📅 STUDY PLAN
+    study_plan = generate_study_plan(topic_count, question_topics)
+
+    # 🔮 PREDICTIONS
+    predicted_questions = predict_questions(topic_count)
 
     return jsonify({
         "total_questions": len(question_topics),
         "questions": question_topics,
-        "topic_weightage": topic_count
+        "topic_weightage": topic_count,
+        "dna_patterns": dna_patterns,
+        "study_plan": study_plan,
+        "predictions": predicted_questions
     })
+
 
 @app.route("/upload-pdf", methods=["POST"])
 def upload_pdf():
