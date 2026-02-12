@@ -1,5 +1,7 @@
 let chart;
 
+const BASE_URL = "https://examprep-v3qu.onrender.com";
+
 function analyze() {
   const text = document.getElementById("inputText").value;
 
@@ -8,7 +10,7 @@ function analyze() {
     return;
   }
 
-  fetch("http://127.0.0.1:5000/analyze-questions", {
+  fetch(`${BASE_URL}/analyze-questions`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ text })
@@ -77,7 +79,7 @@ function uploadPDF() {
   const formData = new FormData();
   formData.append("file", fileInput.files[0]);
 
-  fetch("http://127.0.0.1:5000/upload-pdf", {
+  fetch(`${BASE_URL}/upload-pdf`, {
     method: "POST",
     body: formData
   })
@@ -126,7 +128,7 @@ function generateInsights(topicData) {
 const originalAnalyze = analyze;
 analyze = function () {
   originalAnalyze();
-  fetch("http://127.0.0.1:5000/analyze-questions", {
+  fetch(`${BASE_URL}/analyze-questions`, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({ text: inputText.value })
