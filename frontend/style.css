@@ -148,3 +148,25 @@ body.dark .mcq {
   color: green;
   font-weight: bold;
 }
+
+/* dropdown toggles */
+
+.toggle{
+cursor:pointer;
+display:flex;
+justify-content:space-between;
+align-items:center;
+user-select:none;
+}
+
+.toggle span{
+transition:0.3s;
+}
+
+.card.collapsed > *:not(h2){
+display:none;
+}
+
+.card.collapsed h2 span{
+transform:rotate(-90deg);
+}

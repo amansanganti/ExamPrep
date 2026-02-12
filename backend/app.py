@@ -89,44 +89,55 @@ def generate_generic_mcq(question, topic):
         "answer": "It explains a core concept"
     }
 
-def generate_mcqs(topic, difficulty):
-    if topic in MCQ_BANK:
-        return MCQ_BANK[topic]
+import random
 
-    base_question = f"Which statement best describes {topic}?"
+def generate_mcqs(question, topic, difficulty):
 
-    if difficulty == "Easy":
+    words = re.findall(r"[a-zA-Z]{4,}", question.lower())
+
+    stopwords = ["explain","define","describe","discuss","what","which","list"]
+    keywords = [w for w in words if w not in stopwords]
+
+    # pick keyword if exists
+    key = keywords[0].title() if keywords else topic
+
+    # question stem
+    stem = f"What is true about {key}?"
+
+    # difficulty-based distractors
+    if difficulty == "Hard":
         options = [
-            f"Basic definition of {topic}",
-            "Advanced system design",
-            "Hardware architecture",
-            "Network protocols"
+            f"It involves advanced concepts of {topic}",
+            f"It is unrelated to {topic}",
+            f"It replaces operating systems",
+            f"It is only hardware dependent"
         ]
-        answer = f"Basic definition of {topic}"
 
-    elif difficulty == "Hard":
+    elif difficulty == "Easy":
         options = [
-            f"Design considerations of {topic}",
-            f"Performance trade-offs in {topic}",
-            "Unrelated OS concept",
-            "Hardware-level implementation"
+            f"It is a basic concept of {topic}",
+            f"It is a networking protocol",
+            f"It is a storage device",
+            f"It is unrelated to computing"
         ]
-        answer = f"Performance trade-offs in {topic}"
 
     else:  # Medium
         options = [
-            f"Core concept of {topic}",
-            "Input devices",
-            "Output buffering",
-            "BIOS operations"
+            f"It relates to {topic}",
+            f"It is an input device",
+            f"It is an output buffer",
+            f"It is BIOS functionality"
         ]
-        answer = f"Core concept of {topic}"
+
+    correct = options[0]
+
+    random.shuffle(options)
 
     return [{
-        "q": base_question,
+        "q": stem,
         "options": options,
-        "answer": answer
-    }]  
+        "answer": correct
+    }]
 def predict_questions(topic_count):
     predictions = []
 
@@ -257,7 +268,7 @@ def analyze_questions():
         verb = detect_verb(original_q)
 
         # 3️⃣ MCQs
-        mcqs = MCQ_BANK.get(final_topic, generate_mcqs(final_topic, difficulty))
+        mcqs = MCQ_BANK.get(final_topic, generate_mcqs(original_q, final_topic, difficulty))
 
         # 4️⃣ Count topic
         topic_count[final_topic] = topic_count.get(final_topic, 0) + 1

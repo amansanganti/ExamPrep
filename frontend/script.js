@@ -201,3 +201,9 @@ function renderStudyPlan(plan) {
     table.appendChild(row);
   });
 }
+// dropdown toggle
+document.querySelectorAll(".toggle").forEach(header=>{
+  header.addEventListener("click",()=>{
+    header.parentElement.classList.toggle("collapsed");
+  });
+});

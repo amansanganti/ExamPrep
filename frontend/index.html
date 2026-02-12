@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Exam Question Pattern Analyzer</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
   <!-- Chart.js -->
@@ -11,66 +12,81 @@
   <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-  <h1>Exam Question Pattern Analyzer</h1>
+<h1>Exam Question Pattern Analyzer</h1>
 
-  <!-- INPUT CARD -->
-  <div class="card">
-    <h2>Input Questions</h2>
+<!-- INPUT CARD -->
+<div class="card">
+  <h2>Input Questions</h2>
 
-    <textarea
-      id="inputText"
-      placeholder="Paste exam questions here..."
-    ></textarea>
+  <textarea id="inputText" placeholder="Paste exam questions here..."></textarea>
 
-    <h3>Upload PDF Question Paper</h3>
-    <label class="file-upload">
-        <input type="file" id="pdfFile" accept=".pdf" hidden />
-        <span>📄 Choose PDF File</span>
-        
-    </label>
-    <span id="fileName" class="file-name">No file selected</span>
-    <br><br>
+  <h3>Upload PDF Question Paper</h3>
 
-    <div class="btn-group">
-      <button onclick="uploadPDF()">Upload & Extract PDF</button>
-      <button onclick="analyze()">Analyze</button>
-    </div>
-    <br>
-    <div class="btn-group">
-        <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
-        <button onclick="exportPDF()">⬇ Export Report</button>
-    </div>
+  <label class="file-upload">
+    <input type="file" id="pdfFile" accept=".pdf" hidden />
+    <span>📄 Choose PDF File</span>
+  </label>
 
-    
+  <span id="fileName" class="file-name">No file selected</span>
+  <br><br>
 
-    <div class="card" id="mcqSection">
-        <h2>🧠 Auto-Generated MCQs</h2>
-        <div id="mcqContainer"></div>
-    </div>
-    <div class="card">
-        <h2>🔮 Predicted Exam Questions</h2>
-        <ul id="predictionList"></ul>
-    </div>
-    <div class="card">
-        <h2>🧬 Question DNA Patterns</h2>
-        <ul id="dnaList"></ul>
-    </div>
+  <div class="btn-group">
+    <button onclick="uploadPDF()">Upload & Extract PDF</button>
+    <button onclick="analyze()">Analyze</button>
   </div>
 
-  <!-- CHART CARD -->
-  <div class="card">
-    <h2>Topic Weightage</h2>
-    <canvas id="topicChart"></canvas>
+  <br>
+
+  <div class="btn-group">
+    <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+    <button onclick="exportPDF()">⬇ Export Report</button>
   </div>
 
-  <div class="card" id="insightsCard">
-    <h2>📌 Insights</h2>
-    <ul id="insightsList"></ul></div>
 
-    <div class="card">
-  <h2>📅 Smart Study Plan</h2>
+  <!-- MCQ CARD -->
+  <div class="card">
+    <h2 class="toggle">🧠 Auto-Generated MCQs <span>▼</span></h2>
+    <div id="mcqContainer"></div>
+  </div>
+
+
+  <!-- PREDICTIONS -->
+  <div class="card">
+    <h2 class="toggle">🔮 Predicted Exam Questions <span>▼</span></h2>
+    <ul id="predictionList"></ul>
+  </div>
+
+
+  <!-- DNA -->
+  <div class="card">
+    <h2 class="toggle">🧬 Question DNA Patterns <span>▼</span></h2>
+    <ul id="dnaList"></ul>
+  </div>
+
+</div>
+
+
+<!-- CHART -->
+<div class="card">
+  <h2 class="toggle">Topic Weightage <span>▼</span></h2>
+  <canvas id="topicChart"></canvas>
+</div>
+
+
+<!-- INSIGHTS -->
+<div class="card">
+  <h2 class="toggle">📌 Insights <span>▼</span></h2>
+  <ul id="insightsList"></ul>
+</div>
+
+
+<!-- STUDY PLAN -->
+<div class="card">
+  <h2 class="toggle">📅 Smart Study Plan <span>▼</span></h2>
+
   <table>
     <tr>
       <th>Topic</th>
@@ -81,24 +97,27 @@
   </table>
 </div>
 
-  <!-- TABLE CARD -->
-  <div class="card">
-    <h2>Question Analysis</h2>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Question</th>
-          <th>Topic</th>
-          <th>Difficulty</th>
-          <th>Type</th>
-        </tr>
-      </thead>
-      <tbody id="resultTable"></tbody>
-    </table>
-  </div>
+<!-- TABLE -->
+<div class="card">
+  <h2 class="toggle">Question Analysis <span>▼</span></h2>
 
-  <!-- JS -->
-  <script src="script.js"></script>
+  <table>
+    <thead>
+      <tr>
+        <th>Question</th>
+        <th>Topic</th>
+        <th>Difficulty</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+
+    <tbody id="resultTable"></tbody>
+  </table>
+</div>
+
+
+<script src="script.js"></script>
+
 </body>
 </html>
