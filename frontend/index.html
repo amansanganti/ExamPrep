@@ -5,11 +5,7 @@
   <title>Exam Question Pattern Analyzer</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -17,7 +13,7 @@
 
 <h1>Exam Question Pattern Analyzer</h1>
 
-<!-- INPUT CARD -->
+
 <div class="card">
   <h2>Input Questions</h2>
 
@@ -46,21 +42,23 @@
   </div>
 
 
-  <!-- MCQ CARD -->
   <div class="card">
     <h2 class="toggle">🧠 Auto-Generated MCQs <span>▼</span></h2>
     <div id="mcqContainer"></div>
+    <div id="mcqContainer">
+      <p class="empty-msg">No MCQs generated yet.</p>
+    </div>
   </div>
 
 
-  <!-- PREDICTIONS -->
+
   <div class="card">
     <h2 class="toggle">🔮 Predicted Exam Questions <span>▼</span></h2>
     <ul id="predictionList"></ul>
   </div>
 
 
-  <!-- DNA -->
+
   <div class="card">
     <h2 class="toggle">🧬 Question DNA Patterns <span>▼</span></h2>
     <ul id="dnaList"></ul>
@@ -69,21 +67,21 @@
 </div>
 
 
-<!-- CHART -->
+
 <div class="card">
   <h2 class="toggle">Topic Weightage <span>▼</span></h2>
   <canvas id="topicChart"></canvas>
 </div>
 
 
-<!-- INSIGHTS -->
+
 <div class="card">
   <h2 class="toggle">📌 Insights <span>▼</span></h2>
   <ul id="insightsList"></ul>
 </div>
 
 
-<!-- STUDY PLAN -->
+
 <div class="card">
   <h2 class="toggle">📅 Smart Study Plan <span>▼</span></h2>
 
@@ -98,7 +96,7 @@
 </div>
 
 
-<!-- TABLE -->
+
 <div class="card">
   <h2 class="toggle">Question Analysis <span>▼</span></h2>
 
@@ -116,6 +114,15 @@
   </table>
 </div>
 
+
+
+<div id="loader" class="loader-overlay hidden">
+  <div class="loader"></div>
+  <p>Analyzing Questions...</p>
+</div>
+
+
+<div id="toast" class="toast hidden"></div>
 
 <script src="script.js"></script>
 

@@ -98,13 +98,10 @@ def generate_mcqs(question, topic, difficulty):
     stopwords = ["explain","define","describe","discuss","what","which","list"]
     keywords = [w for w in words if w not in stopwords]
 
-    # pick keyword if exists
     key = keywords[0].title() if keywords else topic
 
-    # question stem
     stem = f"What is true about {key}?"
 
-    # difficulty-based distractors
     if difficulty == "Hard":
         options = [
             f"It involves advanced concepts of {topic}",
@@ -147,10 +144,8 @@ def predict_questions(topic_count):
     max_count = max(topic_count.values())
 
     for topic, count in sorted(topic_count.items(), key=lambda x: x[1], reverse=True):
-        # Confidence calculation (relative frequency)
         confidence = int((count / max_count) * 100)
 
-        # Question pattern based on importance
         if count >= 3:
             questions = [
                 f"Explain {topic}",
@@ -167,7 +162,7 @@ def predict_questions(topic_count):
                 "confidence": confidence
             })
 
-    return predictions[:8]  # limit predictions
+    return predictions[:8] 
 
 def generate_study_plan(topic_count, question_data):
     plan = []
@@ -241,7 +236,6 @@ def analyze_questions():
     topic_count = {}
     question_topics = []
 
-    # 🔁 MAIN LOOP
     for q in raw_questions:
         original_q = q.strip()
         q_lower = original_q.lower()
@@ -249,7 +243,6 @@ def analyze_questions():
         if len(q_lower) < 10:
             continue
 
-        # 1️⃣ Topic detection
         final_topic = None
         for topic, keywords in TOPIC_KEYWORDS.items():
             if any(kw in q_lower for kw in keywords):
@@ -262,18 +255,14 @@ def analyze_questions():
         if not final_topic:
             final_topic = "General"
 
-        # 2️⃣ Other attributes
         difficulty = detect_difficulty(original_q)
         q_type = detect_question_type(original_q)
         verb = detect_verb(original_q)
 
-        # 3️⃣ MCQs
         mcqs = MCQ_BANK.get(final_topic, generate_mcqs(original_q, final_topic, difficulty))
 
-        # 4️⃣ Count topic
         topic_count[final_topic] = topic_count.get(final_topic, 0) + 1
 
-        # 5️⃣ DNA
         dna = {
             "topic": final_topic,
             "difficulty": difficulty,
@@ -281,7 +270,6 @@ def analyze_questions():
             "verb": verb
         }
 
-        # 6️⃣ Append ONCE
         question_topics.append({
             "question": original_q,
             "topic": final_topic,
@@ -292,16 +280,13 @@ def analyze_questions():
             "mcqs": mcqs
         })
 
-    # 🧬 BUILD DNA PATTERNS (AFTER LOOP)
     dna_patterns = {}
     for q in question_topics:
         key = f"{q['topic']} | {q['difficulty']} | {q['type']} | {q['verb']}"
         dna_patterns[key] = dna_patterns.get(key, 0) + 1
 
-    # 📅 STUDY PLAN
     study_plan = generate_study_plan(topic_count, question_topics)
 
-    # 🔮 PREDICTIONS
     predicted_questions = predict_questions(topic_count)
 
     return jsonify({

@@ -3,13 +3,16 @@ let chart;
 const BASE_URL = "https://examprep-v3qu.onrender.com";
 
 function analyze() {
+  showLoader();
   const text = document.getElementById("inputText").value;
 
   if (!text.trim()) {
-    alert("Please enter text or upload a PDF first");
+    showToast("Please enter text or upload a PDF first","warning");
     return;
   }
-
+  const analyzeBtn = document.querySelector("button[onclick='analyze()']");
+  analyzeBtn.disabled = true;
+  analyzeBtn.innerText = "Analyzing...";
   fetch(`${BASE_URL}/analyze-questions`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -27,7 +30,12 @@ function analyze() {
     .catch(err => {
       console.error(err);
       alert("Backend error");
+      hideLoader();
+      showToast("Something went wrong", "error");
     });
+    hideLoader();
+    analyzeBtn.disabled = false;
+    analyzeBtn.innerText = "Analyze";
 }
 
 function renderChart(topicData) {
@@ -72,7 +80,7 @@ function uploadPDF() {
   const fileInput = document.getElementById("pdfFile");
 
   if (!fileInput || !fileInput.files.length) {
-    alert("Please select a PDF file");
+    showToast("Please select a PDF file", "warning");
     return;
   }
 
@@ -86,16 +94,16 @@ function uploadPDF() {
     .then(res => res.json())
     .then(data => {
       if (data.error) {
-        alert(data.error);
+        showToast(data.error , "warning");
         return;
       }
 
       document.getElementById("inputText").value = data.text;
-      alert("PDF extracted successfully. Click Analyze.");
+      showToast("PDF extracted successfully","success");
     })
     .catch(err => {
       console.error(err);
-      alert("PDF upload failed");
+      showToast("PDF upload failed", "warning");
     });
 }
 
@@ -209,3 +217,11 @@ document.querySelectorAll(".toggle").forEach(header=>{
     header.parentElement.classList.toggle("collapsed");
   });
 });
+
+function showLoader() {
+  document.getElementById("loader").classList.remove("hidden");
+}
+
+function hideLoader() {
+  document.getElementById("loader").classList.add("hidden");
+}
